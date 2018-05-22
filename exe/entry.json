@@ -1,0 +1,12 @@
+[{
+    "recipe": "D:\\myAPP\\myKindleSMTP\\微信公众号.recipe",
+    "seed_path": "http://192.168.99.100:3000/users/1/web_requests/8/weixin.xml",
+    "book": "\\微信公众号.mobi",
+    "recver": "18301757612@kindle.cn"
+},
+{
+    "recipe": "D:\\myAPP\\myKindleSMTP\\黑书.recipe",
+    "seed_path": "http://192.168.99.100:3000/users/1/web_requests/24/wechar_heishu.xml",
+    "book": "\\黑书.mobi",
+    "recver": "8618701770669@kindle.cn"
+}]

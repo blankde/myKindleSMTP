@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "name": "订阅微信公众号",
+  "description": "将微信公众号转成成RSS",
+  "source_url": false,
+  "guid": "dd67102f09869c2228f8ed903a32d063",
+  "tag_fg_color": "#ffffff",
+  "tag_bg_color": "#ffff00",
+  "icon": "music",
+  "exported_at": "2018-05-19T02:56:55Z",
+  "agents": [
+    {
+      "type": "Agents::DataOutputAgent",
+      "name": "输出RSS",
+      "disabled": false,
+      "guid": "1ea34bb7e56575e6c007bf2e2f48b990",
+      "options": {
+        "secrets": [
+          "weixin"
+        ],
+        "expected_receive_period_in_days": 2,
+        "template": {
+          "title": "微信公众号推送",
+          "description": "",
+          "item": {
+            "title": "{{title|regex_replace:\"<h2[\\s\\S]+<span class='rich_media_title_ios'>([\\s\\S]+)</span>[\\s\\S]+</h2>\",'\\1'}}",
+            "description": "{{fulltext|regex_replace:'data-src=\"https','src=\"http://img8.najiaoluo.com/img.php?url=https'}}",
+            "link": "{{url}}"
+          }
+        }
+      },
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(平行生活实录) ",
+      "disabled": false,
+      "guid": "2d2b1854c423a407c3e79de9532fdb13",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E5%B9%B3%E8%A1%8C%E7%94%9F%E6%B4%BB%E5%AE%9E%E5%BD%95&ie=utf8&_sug_=n&_sug_type_=&w=01019900&sut=13855&sst0=1526566415764&lkt=6%2C1526566408645%2C1526566409267",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(北渺)",
+      "disabled": false,
+      "guid": "579d23fb69fa6347561015b12e64ca31",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E5%8C%97%E6%B8%BA&ie=utf8&_sug_=n&_sug_type_=&w=01019900&sut=10368&sst0=1526566463874&lkt=7%2C1526566453868%2C1526566456123",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "从搜狗微信搜索公众号，获取最新文章标题 (非认证)",
+      "disabled": false,
+      "guid": "6eb7b8a13001d3d5d1f59fd222652f48",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url": "{{url}}",
+        "type": "html",
+        "mode": "on_change",
+        "extract": {
+          "title": {
+            "css": "#sogou_vr_11002301_box_0 > dl:nth-child(3) > dd > a",
+            "value": ".//text()"
+          }
+        },
+        "template": {
+          "url": "{{ url | to_uri: _response_.url }}"
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 2592000,
+      "propagate_immediately": false
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "从搜狗微信搜索公众号，获取最新文章标题",
+      "disabled": false,
+      "guid": "85aacca89f1adca01657b1fcc8e277fe",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url": "{{url}}",
+        "type": "html",
+        "mode": "on_change",
+        "extract": {
+          "title": {
+            "css": "#sogou_vr_11002301_box_0 > dl:nth-child(4) > dd > a",
+            "value": ".//text()"
+          }
+        },
+        "template": {
+          "url": "{{ url | to_uri: _response_.url }}"
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 2592000,
+      "propagate_immediately": false
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "获取公众号最新文章的链接地址",
+      "disabled": false,
+      "guid": "a4ee2be0c0719aed34d0fa7c8e6d1b6e",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url": "{{url}}",
+        "type": "html",
+        "mode": "on_change",
+        "extract": {
+          "url": {
+            "css": "#sogou_vr_11002301_box_0 > dl:nth-child(4) > dd > a",
+            "value": "@href"
+          }
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 21600,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "获取公众号最新文章的链接地址 (非认证)",
+      "disabled": false,
+      "guid": "b9d2424149963f2c9fa3dec074660801",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url": "{{url}}",
+        "type": "html",
+        "mode": "on_change",
+        "extract": {
+          "url": {
+            "css": "#sogou_vr_11002301_box_0 > dl:nth-child(3) > dd > a",
+            "value": "@href"
+          }
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 21600,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "获取微信公众号全文 ",
+      "disabled": false,
+      "guid": "c5b16d43997a5195533911e8d1824711",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url_from_event": "{{url}}",
+        "type": "html",
+        "mode": "merge",
+        "extract": {
+          "title": {
+            "css": "#activity-name",
+            "value": "."
+          },
+          "fulltext": {
+            "css": "#js_content",
+            "value": "."
+          }
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(新世相)",
+      "disabled": false,
+      "guid": "c70d9f0c2480a9d2768f6ed70182cb20",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E6%96%B0%E4%B8%96%E7%9B%B8&ie=utf8&_sug_=n&_sug_type_=",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(阮一峰的网络日志)",
+      "disabled": false,
+      "guid": "d825dfa7caf90dd41e48263ce15a4427",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E9%98%AE%E4%B8%80%E5%B3%B0%E7%9A%84%E7%BD%91%E7%BB%9C%E6%97%A5%E5%BF%97&ie=utf8&_sug_=n&_sug_type_=",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(好奇心研究所) ",
+      "disabled": false,
+      "guid": "daa3302bf5312ce8fd25b092981e06dd",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E5%A5%BD%E5%A5%87%E5%BF%83%E7%A0%94%E7%A9%B6%E6%89%80&ie=utf8&_sug_=y&_sug_type_=&w=01019900&sut=6385&sst0=1526566526130&lkt=6%2C1526566520532%2C1526566526028",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(真实故事计划)",
+      "disabled": false,
+      "guid": "fb1b1840393d460eb2c25583b4065306",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E7%9C%9F%E5%AE%9E%E6%95%85%E4%BA%8B%E8%AE%A1%E5%88%92&ie=utf8&_sug_=n&_sug_type_=&w=01019900&sut=7232&sst0=1526565768409&lkt=7%2C1526565761663%2C1526565762398",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    }
+  ],
+  "links": [
+    {
+      "source": 1,
+      "receiver": 3
+    },
+    {
+      "source": 2,
+      "receiver": 3
+    },
+    {
+      "source": 3,
+      "receiver": 6
+    },
+    {
+      "source": 4,
+      "receiver": 5
+    },
+    {
+      "source": 5,
+      "receiver": 7
+    },
+    {
+      "source": 6,
+      "receiver": 7
+    },
+    {
+      "source": 7,
+      "receiver": 0
+    },
+    {
+      "source": 8,
+      "receiver": 4
+    },
+    {
+      "source": 9,
+      "receiver": 3
+    },
+    {
+      "source": 10,
+      "receiver": 4
+    },
+    {
+      "source": 11,
+      "receiver": 4
+    }
+  ],
+  "control_links": [
+
+  ]
+}

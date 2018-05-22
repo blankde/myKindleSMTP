@@ -1,0 +1,14 @@
+#!/usr/bin/env python2
+# vim:fileencoding=utf-8
+from __future__ import unicode_literals, division, absolute_import, print_function
+from calibre.web.feeds.news import AutomaticNewsRecipe
+
+class BasicUserRecipe1526688910(AutomaticNewsRecipe):
+    title          = '\u5fae\u4fe1\u516c\u4f17\u53f7'
+    oldest_article = 7
+    max_articles_per_feed = 100
+    auto_cleanup   = True
+
+    feeds          = [
+        ('\u5fae\u4fe1\u516c\u4f17\u53f7', 'http://192.168.99.100:3000/users/1/web_requests/8/weixin.xml'),
+    ]

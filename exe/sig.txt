@@ -1,0 +1,2 @@
+http://192.168.99.100:3000/users/1/web_requests/24/wechar_heishu.xml d2dc593dc20b02a4e5ce8c85a52b9298
+http://192.168.99.100:3000/users/1/web_requests/8/weixin.xml 6d3578afe452a8bd9a6960edb2cd08de

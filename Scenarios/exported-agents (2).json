@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "name": "订阅微信公众号-黑书",
+  "description": "将微信公众号转成成RSS",
+  "source_url": false,
+  "guid": "dd67102f09869c2228f8ed903a32d061",
+  "tag_fg_color": "#ffffff",
+  "tag_bg_color": "#ffff00",
+  "icon": "music",
+  "exported_at": "2018-05-19T02:57:06Z",
+  "agents": [
+    {
+      "type": "Agents::DataOutputAgent",
+      "name": "输出RSS（黑书）",
+      "disabled": false,
+      "guid": "1ea34bb7e56575e6c007bf2e2f48b992",
+      "options": {
+        "secrets": [
+          "wechar_heishu"
+        ],
+        "expected_receive_period_in_days": 2,
+        "template": {
+          "title": "订阅微信公众号（黑书）",
+          "description": "将微信公众号（黑书）输出RSS",
+          "item": {
+            "title": "{{title|regex_replace:\"<h2[\\s\\S]+<span class='rich_media_title_ios'>([\\s\\S]+)</span>[\\s\\S]+</h2>\",'\\1'}}",
+            "description": "{{fulltext|regex_replace:'data-src=\"https','src=\"http://img8.najiaoluo.com/img.php?url=https'}}",
+            "link": "{{url}}"
+          }
+        }
+      },
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "从搜狗微信搜索公众号，获取最新文章标题（黑书）",
+      "disabled": false,
+      "guid": "85aacca89f1adca01657b1fcc8e277f3",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url": "{{url}}",
+        "type": "html",
+        "mode": "on_change",
+        "extract": {
+          "title": {
+            "css": "#sogou_vr_11002301_box_0 > dl:nth-child(4) > dd > a",
+            "value": ".//text()"
+          }
+        },
+        "template": {
+          "url": "{{ url | to_uri: _response_.url }}"
+        }
+      },
+      "schedule": "6am",
+      "keep_events_for": 2592000,
+      "propagate_immediately": false
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "获取公众号最新文章的链接地址（黑书）",
+      "disabled": false,
+      "guid": "a4ee2be0c0719aed34d0fa7c8e6d1b64",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url": "{{url}}",
+        "type": "html",
+        "mode": "on_change",
+        "extract": {
+          "url": {
+            "css": "#sogou_vr_11002301_box_0 > dl:nth-child(4) > dd > a",
+            "value": "@href"
+          }
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 21600,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::PhantomJsCloudAgent",
+      "name": "PhantomJS Cloud(黑书)",
+      "disabled": false,
+      "guid": "a56ed8f305112a2cfd69e09fd7cd5c6c",
+      "options": {
+        "mode": "clean",
+        "api_key": "{% credential phantomjs_cloud %}",
+        "url": "http://weixin.sogou.com/weixin?type=1&s_from=input&query=%E9%BB%91%E4%B9%A6&ie=utf8&_sug_=n&_sug_type_=",
+        "render_type": "html",
+        "output_as_json_radio": "false",
+        "output_as_json": "false",
+        "ignore_images_radio": "false",
+        "ignore_images": "false",
+        "user_agent": "Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+",
+        "wait_interval": "0"
+      },
+      "schedule": "6am",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    },
+    {
+      "type": "Agents::WebsiteAgent",
+      "name": "获取微信公众号全文（黑书）",
+      "disabled": false,
+      "guid": "c5b16d43997a5195533911e8d1824715",
+      "options": {
+        "expected_update_period_in_days": "2",
+        "url_from_event": "{{url}}",
+        "type": "html",
+        "mode": "merge",
+        "extract": {
+          "title": {
+            "css": "#activity-name",
+            "value": "."
+          },
+          "fulltext": {
+            "css": "#js_content",
+            "value": "."
+          }
+        }
+      },
+      "schedule": "never",
+      "keep_events_for": 0,
+      "propagate_immediately": true
+    }
+  ],
+  "links": [
+    {
+      "source": 1,
+      "receiver": 2
+    },
+    {
+      "source": 2,
+      "receiver": 4
+    },
+    {
+      "source": 3,
+      "receiver": 1
+    },
+    {
+      "source": 4,
+      "receiver": 0
+    }
+  ],
+  "control_links": [
+
+  ]
+}
