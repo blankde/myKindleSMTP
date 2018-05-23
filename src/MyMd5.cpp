@@ -254,9 +254,9 @@ char *MD5_file(char *path, int md5_len,bool type)
 			if (hRequest != NULL)
 			{
 				DWORD dwBytesRead;
-				char szBuffer[BUF_SIZE] = { 0 };
+				char szBuffer[BUF_SIZE*2] = { 0 };
 
-				if (InternetReadFile(hRequest, szBuffer, BUF_SIZE, &dwBytesRead))
+				if (InternetReadFile(hRequest, szBuffer, BUF_SIZE*2, &dwBytesRead))
 				{
 					unsigned char temp_data[BUF_SIZE*2];
 					RtlMoveMemory(temp_data, szBuffer, BUF_SIZE*2);
